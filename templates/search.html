@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+{% block title %}Search Devices{% endblock %}
+{% block content %}
+    <h2>Vyhľadať v zozname</h2>
+    <form method="POST" action="">
+        {{ form.hidden_tag() }}
+        <div>
+            {{ form.criteria.label }}<br>
+            {{ form.criteria() }}<br>
+        </div>
+        <div>
+            {{ form.term.label }}<br>
+            {{ form.term(size=32) }}<br>
+        </div>
+        <div>
+            {{ form.submit() }}
+        </div>
+    </form>
+    <h3>Výsledky</h3>
+    <ul>
+        {% for device in devices %}
+            <li>{{ device.serial_number }} - {{ device.type }} - {{ device.firmware_version }} - {{ device.invoice_number }} - {{ device.date_of_service }} - {{ device.fault_description }}</li>
+        {% endfor %}
+    </ul>
+{% endblock %}
