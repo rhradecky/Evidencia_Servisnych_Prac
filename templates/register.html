@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="sk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registracia noveho uzivatela</title>
+    <link rel="stylesheet" href="../static/styles.css">
+</head>
+<body>
+    <div class="login-container">
+    <h2>Registrácia</h2>
+     <form action="/register" method="post">
+        <label for="username">Používateľské meno</label>
+        <input type="text" id="username" name="username" required>
+        <label for="password">Heslo</label>
+        <input type="password" id="password" name="password" required>
+        <button type="submit">Registrovať</button>
+    </form>
+</body>
+</html>
+
