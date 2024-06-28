@@ -1,25 +1,74 @@
-{% extends "base.html" %}
-{% block title %}Search Devices{% endblock %}
-{% block content %}
-    <h2>Vyhľadať v zozname</h2>
-    <form method="POST" action="">
-        {{ form.hidden_tag() }}
-        <div>
-            {{ form.criteria.label }}<br>
-            {{ form.criteria() }}<br>
-        </div>
-        <div>
-            {{ form.term.label }}<br>
-            {{ form.term(size=32) }}<br>
-        </div>
-        <div>
-            {{ form.submit() }}
-        </div>
-    </form>
-    <h3>Výsledky</h3>
-    <ul>
-        {% for device in devices %}
-            <li>{{ device.serial_number }} - {{ device.type }} - {{ device.firmware_version }} - {{ device.invoice_number }} - {{ device.date_of_service }} - {{ device.fault_description }}</li>
-        {% endfor %}
-    </ul>
-{% endblock %}
+<!DOCTYPE html>
+<html lang="sk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vyhľadávať Záznamy</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
+<body>
+    <div class="container">
+        <h1 class="mt-5">Vyhľadávať Záznamy</h1>
+
+        <form action="{{ url_for('search') }}" method="post" class="mb-5">
+            <div class="form-row">
+                <div class="form-group col-md-6">
+                    <label for="serial_number">Sériové číslo:</label>
+                    <input type="text" class="form-control" id="serial_number" name="serial_number">
+                </div>
+                <div class="form-group col-md-6">
+                    <label for="fw">Verzia firmware:</label>
+                    <input type="text" class="form-control" id="fw" name="fw">
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group col-md-6">
+                    <label for="uroven">Úroveň:</label>
+                    <input type="text" class="form-control" id="uroven" name="uroven">
+                </div>
+                <div class="form-group col-md-6">
+                    <label for="faktura">Faktúra:</label>
+                    <input type="text" class="form-control" id="faktura" name="faktura">
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group col-md-6">
+                    <label for="datum">Dátum:</label>
+                    <input type="date" class="form-control" id="datum" name="datum">
+                </div>
+            </div>
+            <button type="submit" class="btn btn-primary">Vyhľadať</button>
+        </form>
+
+        {% if results %}
+            <h2>Výsledky vyhľadávania</h2>
+            <table class="table table-bordered">
+                <thead class="thead-dark">
+                    <tr>
+                        <th>Sériové číslo</th>
+                        <th>Verzia firmware</th>
+                        <th>Úroveň</th>
+                        <th>Faktúra</th>
+                        <th>Dátum</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for row in results %}
+                        <tr>
+                            <td>{{ row.serial_number }}</td>
+                            <td>{{ row.fw }}</td>
+                            <td>{{ row.uroven }}</td>
+                            <td>{{ row.faktura }}</td>
+                            <td>{{ row.datum }}</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        {% endif %}
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>

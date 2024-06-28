@@ -1,27 +1,28 @@
-<div class="dropdown" data-bs-theme="light">
-  <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButtonLight" data-bs-toggle="dropdown" aria-expanded="false">
-    Default dropdown
-  </button>
-  <ul class="dropdown-menu" aria-labelledby="dropdownMenuButtonLight">
-    <li><a class="dropdown-item active" href="#">Action</a></li>
-    <li><a class="dropdown-item" href="#">Action</a></li>
-    <li><a class="dropdown-item" href="#">Another action</a></li>
-    <li><a class="dropdown-item" href="#">Something else here</a></li>
-    <li><hr class="dropdown-divider"></li>
-    <li><a class="dropdown-item" href="#">Separated link</a></li>
-  </ul>
-</div>
+<!DOCTYPE html>
+<html lang="sk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login stránka</title>
+    <link rel="stylesheet" href="../static/styles.css">
+</head>
+<body>
+    <div class="login-container">
+        <h2>Pridať ďalšiu položku</h2>
+    <form action="/add_device" method="post">
+        <label for="serial_number">Sériové číslo:</label>
+        <input type="text" id="serial_number" name="serial_number">
+        <label for="fw">Verzia firmware:</label>
+        <input type="text" id="fw" name="fw">
+        <label for="uroven">Úroveň:</label>
+        <input type="text" id="uroven" name="uroven">
+        <label for="faktura">Faktúra:</label>
+        <input type="text" id="faktura" name="faktura">
+        <label for="datum">Dátum:</label>
+        <input type="text" id="datum" name="datum"><br>
+        <button type="submit">Pridať</button>
+    </form>
 
-<div class="dropdown" data-bs-theme="dark">
-  <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButtonDark" data-bs-toggle="dropdown" aria-expanded="false">
-    Dark dropdown
-  </button>
-  <ul class="dropdown-menu" aria-labelledby="dropdownMenuButtonDark">
-    <li><a class="dropdown-item active" href="#">Action</a></li>
-    <li><a class="dropdown-item" href="#">Action</a></li>
-    <li><a class="dropdown-item" href="#">Another action</a></li>
-    <li><a class="dropdown-item" href="#">Something else here</a></li>
-    <li><hr class="dropdown-divider"></li>
-    <li><a class="dropdown-item" href="#">Separated link</a></li>
-  </ul>
-</div>
+    </div>
+</body>
+</html>
