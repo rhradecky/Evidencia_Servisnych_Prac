@@ -3,26 +3,49 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login stránka</title>
-    <link rel="stylesheet" href="../static/styles.css">
+    <title>Pridať ďalšiu položku</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
 </head>
 <body>
-    <div class="login-container">
-        <h2>Pridať ďalšiu položku</h2>
-    <form action="/add_device" method="post">
-        <label for="serial_number">Sériové číslo:</label>
-        <input type="text" id="serial_number" name="serial_number">
-        <label for="fw">Verzia firmware:</label>
-        <input type="text" id="fw" name="fw">
-        <label for="uroven">Úroveň:</label>
-        <input type="text" id="uroven" name="uroven">
-        <label for="faktura">Faktúra:</label>
-        <input type="text" id="faktura" name="faktura">
-        <label for="datum">Dátum:</label>
-        <input type="text" id="datum" name="datum"><br>
-        <button type="submit">Pridať</button>
-    </form>
-
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-6">
+                <div class="card mt-5">
+                    <div class="card-header">
+                        <h2>Pridať ďalšiu položku</h2>
+                    </div>
+                    <div class="card-body">
+                        <form action="/add_device" method="post">
+                            <div class="form-group">
+                                <label for="serial_number">Sériové číslo:</label>
+                                <input type="text" class="form-control" id="serial_number" name="serial_number">
+                            </div>
+                            <div class="form-group">
+                                <label for="fw">Verzia firmware:</label>
+                                <input type="text" class="form-control" id="fw" name="fw">
+                            </div>
+                            <div class="form-group">
+                                <label for="uroven">Úroveň:</label>
+                                <input type="text" class="form-control" id="uroven" name="uroven">
+                            </div>
+                            <div class="form-group">
+                                <label for="faktura">Faktúra:</label>
+                                <input type="text" class="form-control" id="faktura" name="faktura">
+                            </div>
+                            <div class="form-group">
+                                <label for="datum">Dátum:</label>
+                                <input type="date" class="form-control" id="datum" name="datum">
+                            </div>
+                            <button type="submit" class="btn btn-primary">Pridať</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </body>
 </html>

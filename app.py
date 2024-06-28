@@ -1,13 +1,11 @@
-from flask import Flask, render_template,session, request, redirect, url_for, flash
+from flask import Flask, render_template, session, request, redirect, url_for, flash, send_file, make_response
 from flask_sqlalchemy import SQLAlchemy
 from flask_bcrypt import Bcrypt
-import psycopg2
 import pandas as pd
 import os
+from io import StringIO
 
 
-
-# Inicializácia Flask aplikácie
 app = Flask(__name__)
 UPLOAD_FOLDER = 'uploads'
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
@@ -15,11 +13,13 @@ app.config['SECRET_KEY'] = 'blablabla'
 app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://upkjsca8ynbl11b0ikgz:f1nKXzsR6eivAWjmQDT6i6W0E7b2vG@bdipmw29ejuoeccxynb1-postgresql.services.clever-cloud.com:50013/bdipmw29ejuoeccxynb1'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
+
 db = SQLAlchemy(app)
 bcrypt = Bcrypt(app)
 
 if not os.path.exists(UPLOAD_FOLDER):
     os.makedirs(UPLOAD_FOLDER)
+
 
 class Evidencia(db.Model):
     __tablename__ = 'evidencia'
@@ -35,16 +35,12 @@ class User(db.Model):
     __tablename__ = 'users'
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(50), unique=True, nullable=False)
-    password_hash  = db.Column(db.String(128), nullable=False)
+    password_hash = db.Column(db.String(128), nullable=False)
 
     def set_password(self, password):
-        from flask_bcrypt import Bcrypt
-        bcrypt = Bcrypt()
         self.password_hash = bcrypt.generate_password_hash(password).decode('utf-8')
 
     def check_password(self, password):
-        from flask_bcrypt import Bcrypt
-        bcrypt = Bcrypt()
         return bcrypt.check_password_hash(self.password_hash, password)
 
 
@@ -60,6 +56,7 @@ def register():
         return redirect(url_for('login'))
     return render_template('register.html')
 
+
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     if request.method == 'POST':
@@ -72,17 +69,20 @@ def login():
         flash('Invalid username or password')
     return render_template('login.html')
 
+
 @app.route('/logout')
 def logout():
     session.pop('username', None)
     flash('Boli ste úspešne odhlásený')
     return redirect(url_for('login'))
 
+
 @app.route('/')
 def home():
     if 'username' in session:
         return redirect(url_for('welcome', username=session['username']))
     return redirect(url_for('login'))
+
 
 @app.route('/welcome/<username>')
 def welcome(username):
@@ -145,24 +145,48 @@ def upload_file():
         file_path = os.path.join(app.config['UPLOAD_FOLDER'], file.filename)
         file.save(file_path)
         import_csv_to_db(file_path)
-        return redirect(url_for('index'))
+        return redirect(url_for('welcome', username=session['username']))
+
+
+@app.route('/export')
+def export_data():
+    records = Evidencia.query.all()
+    data = []
+
+    for record in records:
+        data.append({
+            'serial_number': record.serial_number,
+            'fw': record.fw,
+            'uroven': record.uroven,
+            'faktura': record.faktura,
+            'datum': record.datum
+        })
+
+    df = pd.DataFrame(data)
+    csv_output = StringIO()
+    df.to_csv(csv_output, index=False)
+    csv_output.seek(0)
+
+    response = make_response(csv_output.getvalue())
+    response.headers['Content-Disposition'] = 'attachment; filename=export.csv'
+    response.headers['Content-Type'] = 'text/csv'
+    return response
 
 
 def import_csv_to_db(file_path):
-    conn = connect_db()
-    cur = conn.cursor()
-
     data = pd.read_csv(file_path)
     for i, row in data.iterrows():
-        cur.execute(
-            "INSERT INTO your_table_name (serial_number, fw, uroven, faktura, datum) VALUES (%s, %s, %s, %s, %s)",
-            (row['serial_number'], row['fw'], row['uroven'], row['faktura'], row['datum'])
+        new_record = Evidencia(
+            serial_number=row['serial_number'],
+            fw=row['fw'],
+            uroven=row['uroven'],
+            faktura=row['faktura'],
+            datum=row['datum']
         )
-
-    conn.commit()
-    cur.close()
-    conn.close()
+        db.session.add(new_record)
+    db.session.commit()
     os.remove(file_path)
+
 
 if __name__ == '__main__':
     db.create_all()

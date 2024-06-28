@@ -1,80 +1,61 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="sk">
 <head>
     <meta charset="UTF-8">
-    <title>Evidencia</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
-    <style>
-        table {
-            width: 100%;
-            border-collapse: collapse;
-        }
-        table, th, td {
-            border: 1px solid black;
-        }
-        th, td {
-            padding: 8px;
-            text-align: left;
-        }
-    </style>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vitajte</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.10.21/css/dataTables.bootstrap4.min.css">
 </head>
 <body>
-<nav class="navbar navbar-expand-lg navbar-light bg-light">
-  <div class="container-fluid">
-    <a class="navbar-brand" href="#">Evidencia Servisnych Prac</a>
-    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-      <span class="navbar-toggler-icon"></span>
-    </button>
-    <div class="collapse navbar-collapse" id="navbarNav">
-      <ul class="navbar-nav ms-auto">
-        <li class="nav-item">
-          <a class="nav-link active" aria-current="page" href="#">Home</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="/add_device">Add New Device.</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="/search">Search</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="#">Export</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="#">Import</a>
-        </li>
-            <li class="nav-item">
-            <a class="nav-link" href="/logout">logout</a>
-
-        </li>
-      </ul>
+    <div class="container">
+        <h1 class="mt-5">Vitajte, {{ username }}</h1>
+        <a href="{{ url_for('logout') }}" class="btn btn-secondary">Odhlásiť</a>
+        <h2 class="mt-4">Záznamy</h2>
+        <table id="recordsTable" class="table table-bordered">
+            <thead class="thead-dark">
+                <tr>
+                    <th>Sériové číslo</th>
+                    <th>Verzia firmware</th>
+                    <th>Úroveň</th>
+                    <th>Faktúra</th>
+                    <th>Dátum</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for record in records %}
+                <tr>
+                    <td>{{ record.serial_number }}</td>
+                    <td>{{ record.fw }}</td>
+                    <td>{{ record.uroven }}</td>
+                    <td>{{ record.faktura }}</td>
+                    <td>{{ record.datum }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        <h2>Možnosti</h2>
+        <a href="{{ url_for('add_device') }}" class="btn btn-primary">Pridať zariadenie</a>
+        <a href="{{ url_for('search') }}" class="btn btn-primary">Vyhľadať záznamy</a>
+        <a href="{{ url_for('export_data') }}" class="btn btn-success">Exportovať do CSV</a>
+        <form action="{{ url_for('upload_file') }}" method="post" enctype="multipart/form-data" class="mt-4">
+            <div class="form-group">
+                <label for="file">Vyberte CSV súbor:</label>
+                <input type="file" class="form-control-file" id="file" name="file">
+            </div>
+            <button type="submit" class="btn btn-info">Importovať</button>
+        </form>
     </div>
-  </div>
-</nav>
 
-<div class="container mt-4">
-    <h1>Evidencia</h1>
-    <table>
-        <tr>
-            <th>Radio ID</th>
-            <th>Serial Number</th>
-            <th>Firmware</th>
-            <th>Úroveň</th>
-            <th>Faktúra</th>
-            <th>Dátum</th>
-        </tr>
-        {% for record in records %}
-        <tr>
-            <td>{{ record.radio_id }}</td>
-            <td>{{ record.serial_number }}</td>
-            <td>{{ record.fw }}</td>
-            <td>{{ record.uroven }}</td>
-            <td>{{ record.faktura }}</td>
-            <td>{{ record.datum.strftime('%d.%m.%Y') }}</td>
-        </tr>
-        {% endfor %}
-    </table>
-</div>
-
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script src="https://cdn.datatables.net/1.10.21/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.10.21/js/dataTables.bootstrap4.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            $('#recordsTable').DataTable();
+        });
+    </script>
 </body>
 </html>
