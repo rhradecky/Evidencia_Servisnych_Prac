@@ -6,6 +6,7 @@ import pandas as pd
 import os
 
 
+
 # Inicializácia Flask aplikácie
 app = Flask(__name__)
 UPLOAD_FOLDER = 'uploads'
